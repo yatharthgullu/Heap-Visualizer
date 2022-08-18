@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heap Visualiser</title>
+    <style>
+      body{
+      	background: #7FFFD4;	
+      }
+    </style>
+</head>
+<body>
+    <div>
+        <center>
+            <h1>Heap Visualiser</h1>
+        </center>
+        <input id ="value", placeholder="Enter Value"/>
+        <button onclick="insertNode()">Insert</button>
+        <button onclick="removeNode()">Remove</button>
+    </div>
+    <svg height="771px" width="1700px">
+        <!-- <circle r="20" cx="20" cy="20" fill="black"></circle> -->
+    </svg>
+
+    <script>
+        var svgns = "http://www.w3.org/2000/svg";
+const positions = [
+    { "x": "850", "y": "150" },
+    { "x": "425", "y": "250" },
+    { "x": "1275", "y": "250"},
+    { "x": "212.5", "y": "370" },
+    { "x": "637.5", "y": "370" },
+    { "x": "1062.5", "y": "370" },
+    { "x": "1487.5", "y": "370" },
+    { "x": "106.25", "y": "500" },
+    { "x": "318.75", "y": "500" },
+    { "x": "531.25", "y": "500" },
+    { "x": "743.75", "y": "500" },
+    { "x": "956.25", "y": "500" },
+    { "x": "1168.75", "y": "500" },
+    { "x": "1381.25", "y": "500" },
+    { "x": "1593.75", "y": "500" },
+]
+
+const positions2 = [
+    { "x": "830", "y": "150" },
+    { "x": "405", "y": "250" },
+    { "x": "1295", "y": "250"},
+    { "x": "192.5", "y": "370" },
+    { "x": "657.5", "y": "370" },
+    { "x": "1042.5", "y": "370" },
+    { "x": "1507.5", "y": "370" },
+    { "x": "86.25", "y": "500" },
+    { "x": "338.75", "y": "500" },
+    { "x": "511.25", "y": "500" },
+    { "x": "763.75", "y": "500" },
+    { "x": "936.25", "y": "500" },
+    { "x": "1188.75", "y": "500" },
+    { "x": "1361.25", "y": "500" },
+    { "x": "1613.75", "y": "500" },
+]
+
+var idx = -1;
+
+function removeNode(){
+	if(idx>=0){
+		--idx;
+		remove();	
+	}
+}
+
+function insertNode() {
+    ++idx;
+    var va = document.getElementById("value").value;
+    if (idx != 0) {
+        addLine(idx, Math.floor((idx - 1) / 2));
+    }
+    var element = document.createElementNS(svgns, "circle");
+    element.setAttributeNS(null, "id", idx+100); 
+    element.setAttributeNS(null, "r", "5");
+    element.setAttributeNS(null, "cx", positions[idx].x);
+    element.setAttributeNS(null, "cy", positions[idx].y);
+    element.setAttributeNS(null, "stroke", "black");
+    element.setAttributeNS(null, "stroke-width", "2px")
+    element.setAttributeNS(null, "fill", "darkblue");
+
+    var elemet = document.createElementNS(svgns, "text");
+    elemet.setAttributeNS(null, "id", idx); 
+    elemet.setAttributeNS(null, "x", positions2[idx].x);
+    elemet.setAttributeNS(null, "y", positions[idx].y);
+    elemet.setAttributeNS(null, "text-anchor", "middle");
+    elemet.setAttributeNS(null, "dominant-baseline", "middle");
+    elemet.setAttributeNS(null, "stroke", "red");
+
+    var text = document.createTextNode(va);
+
+    elemet.appendChild(text);
+    document.getElementsByTagName("svg")[0].appendChild(element);
+    document.getElementsByTagName("svg")[0].appendChild(elemet);
+    insert(va);
+}
+
+function addLine(idx1, idx2) {
+    
+    var x1 = parseInt(positions[idx1].x);
+    var x2 = parseInt(positions[idx2].x);
+    var y1 = parseInt(positions[idx1].y);
+    var y2 = parseInt(positions[idx2].y);
+    var element = document.createElementNS(svgns, "line");
+    element.setAttributeNS(null, "id", idx1+200); 
+    element.setAttributeNS(null, "x1", x1);
+    element.setAttributeNS(null, "x2", x2);
+    element.setAttributeNS(null, "y1", y1);
+    element.setAttributeNS(null, "y2", y2);
+    element.setAttributeNS(null, "stroke", "darkblue");
+
+    document.getElementsByTagName("svg")[0].appendChild(element);   
+}
+    </script>
+    <script>
+        var heap = [];
+
+function sleep(ms) {
+    ms = 750;
+  	return new Promise(
+    	resolve => setTimeout(resolve, ms)
+  	);
+}
+
+async function animate(e1,e2,e3,e4,e5,e6) {
+	console.log(e1);
+	console.log(e2);
+	if((e1!=null && e1>e2) || e2==null){
+		e1.setAttributeNS(null,"stroke","red");
+		e1.setAttributeNS(null,"stroke-width","6px");
+	}
+	else{
+		e2.setAttributeNS(null,"stroke","red");
+		e2.setAttributeNS(null,"stroke-width","6px");
+	}
+	e3.setAttributeNS(null, "fill", "red");
+	e3.setAttributeNS(null, "r", "6");
+	e4.setAttributeNS(null, "fill", "red");
+	e4.setAttributeNS(null, "r", "6");
+	e5.setAttributeNS(null, "stroke", "darkblue");
+	e6.setAttributeNS(null, "stroke", "darkblue");
+	
+	await sleep();
+	[e5.innerHTML, e6.innerHTML] = [e6.innerHTML, e5.innerHTML];
+	if((e1!=null && e1>e2) || e2==null){
+		e1.setAttributeNS(null,"stroke","darkblue");
+		e1.setAttributeNS(null,"stroke-width","1px");
+	}
+	else{
+		e2.setAttributeNS(null,"stroke","darkblue");
+		e2.setAttributeNS(null,"stroke-width","1px");
+	}
+	e3.setAttributeNS(null, "fill", "darkblue");
+	e3.setAttributeNS(null, "r", "5");
+	e4.setAttributeNS(null, "fill", "darkblue");
+	e4.setAttributeNS(null, "r", "5");
+	e5.setAttributeNS(null, "stroke", "red");
+	e6.setAttributeNS(null, "stroke", "red");
+	
+}
+
+async function swap(e1, e2){
+	var cid1 = document.getElementById(parseInt(e1) + 100), 
+		lid1 = document.getElementById(parseInt(e1) + 200);
+	var cid2 = document.getElementById(parseInt(e2) + 100), 
+		lid2 = document.getElementById(parseInt(e2) + 200);
+	var p = document.getElementById(e1),
+  		c = document.getElementById(e2);
+	animate(lid1,lid2,cid1,cid2,p,c);
+	await sleep();
+	[heap[e2],heap[e1]] = [heap[e1],heap[e2]];
+};
+
+async function swapO(e1,e2){
+	var p = document.getElementById(e1),
+  		c = document.getElementById(e2);
+  	[p.innerHTML, c.innerHTML] = [c.innerHTML, p.innerHTML];	
+	[heap[e2],heap[e1]] = [heap[e1],heap[e2]];
+}
+
+async function insert(value){
+	heap.push(parseInt(value,10));
+	var n = heap.length-1;
+	var par = Math.floor((n-1)/2);
+	while(par>-1&&heap[par]>heap[n]){
+		swap(par,n);
+		await sleep();
+		n = par;
+		par = Math.floor((n-1)/2);
+	}
+};
+
+async function heapify(cur){
+	var left = 2*cur+1,
+			right = 2*cur+2;
+	var largest = cur;
+	if(left<heap.length && heap[cur] > heap[left]){
+		if(right<heap.length && heap[right]<heap[left]){
+			console.log(right);
+		    console.log(cur);
+			swap(right,cur);
+			await sleep();    
+			heapify(right);
+		}
+		else{
+			console.log(left);
+			console.log(cur);
+			swap(left,cur);
+			await sleep();
+			heapify(left);
+		}
+	}
+	else if(right<heap.length && heap[cur] > heap[right]){
+		console.log(right);
+		console.log(cur);
+		swap(right,cur);
+		await sleep();
+		heapify(right);
+	}
+};
+
+async function remove(){
+	var n = heap.length;
+	var idx = n-1;
+	swapO(0,idx);
+	await sleep();
+	var delText = document.getElementById(idx);
+	var delCircle = document.getElementById(idx+100);
+	delText.remove();
+	delCircle.remove();
+	if(n!=1){
+		var delLine = document.getElementById(idx+200);
+		delLine.remove();
+	}
+	heap.splice(n-1);
+	n--;
+	heapify(0);
+}
+
+
+
+    </script>
+</body>
+</html>
